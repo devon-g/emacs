@@ -42,15 +42,13 @@
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :ensure t
-  :config
-  (load-theme 'doom-gruvbox t))
+  :init (load-theme 'doom-gruvbox t))
 
 ;; Minibuffer completion
 (use-package ivy
   :ensure t
   :init (ivy-mode 1)
-  :config
-  (setq ivy-use-virtual-buffers t))
+  :config (setq ivy-use-virtual-buffers t))
 
 ;; Integrate ivy with common commands
 (use-package counsel
@@ -96,22 +94,24 @@
   :ensure t
   :bind-keymap
   ("C-c p" . projectile-command-map)
-  :init
-  (projectile-mode 1))
+  :config (projectile-mode 1))
 
 ;; Counsel support for projectile
 (use-package counsel-projectile
   :ensure t
-  :init (counsel-projectile-mode 1))
+  :config (counsel-projectile-mode 1))
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
   :ensure t
-  :init
-  (which-key-mode 1))
+  :init (which-key-mode 1))
 
 ;; Git integration
 (use-package magit
+  :ensure t)
+
+;; Extension for magit
+(use-package forge
   :ensure t)
 
 ;; Mail client
