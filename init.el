@@ -45,46 +45,13 @@
   :config
   (load-theme 'doom-gruvbox t))
 
-;; Vertical completion for most menus
-(use-package vertico
+;; Minibuffer completion
+(use-package ivy
   :ensure t
-  :init
-  (vertico-mode 1))
-;; Annotations for vertico results
-(use-package marginalia
-  :ensure t
-  :init
-  (marginalia-mode 1))
-
-;; Fuzzy completion style
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-
-;; Perform actions based on what is near point
-(use-package embark
-  :ensure t
-  :bind (("C-." . embark-act)
-	 ("M-." . embark-dwim)))
-
-;; Search and navigation commands
-;; TODO: Further configure
-(use-package consult
-  :ensure t
-  :bind (([remap Info-search] . consult-info)
-	 ;; C-x bindings (ctl-x-map
-	 ("C-x b" . consult-buffer))
+  :init (ivy-mode 1)
   :config
-  (autoload 'projectile-project-root "projectile")
-  (setq consult-project-function (lambda (_) (projectile-project-root))))
-;; Embark features for consult
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t))
 
 ;; Project management
 (use-package projectile
@@ -93,9 +60,6 @@
   ("C-c p" . projectile-command-map)
   :init
   (projectile-mode 1))
-;; Consult projectile features
-(use-package consult-projectile
-  :ensure t)
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
@@ -106,7 +70,6 @@
 ;; Git integration
 (use-package magit
   :ensure t)
-
 
 ;; Mail client
 ;; Uses msmtp to send mail
