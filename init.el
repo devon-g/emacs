@@ -17,7 +17,7 @@
 (setq visible-bell t)
 
 ;; Set font and size because this shit too small by default
-(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 150)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 200)
 
 ;; Enable column info in status line
 (column-number-mode)
@@ -50,8 +50,46 @@
   :ensure t
   :init (ivy-mode 1)
   :config
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t))
+  (setq ivy-use-virtual-buffers t))
+
+;; Integrate ivy with common commands
+(use-package counsel
+  :ensure t
+  :bind (("C-c C-r" . ivy-resume)
+	 ("M-x" . counsel-M-x)
+	 ("M-y" . counsel-yank-pop)
+	 ("C-x C-f" . counsel-find-file)
+	 ("C-x b" . counsel-switch-buffer)
+	 ("C-x r b" . counsel-bookmark)
+	 ("C-h a" . counsel-apropos-command)
+	 ("C-h b" . counsel-descbinds)
+	 ("C-h f" . counsel-describe-function)
+	 ("C-h v" . counsel-describe-variable)
+	 ("C-h o" . counsel-describe-symbol)
+	 ("C-h l" . counsel-find-library)
+	 ("C-h S" . counsel-info-lookup-symbol)
+	 ("C-h u" . counsel-unicode-char)
+	 ("C-c g" . counsel-git)
+	 ("C-c j" . counsel-git-grep)
+	 ("C-c k" . counsel-ag)
+	 ("C-x l" . counsel-locate)
+	 ("C-S-o" . counsel-rhythmbox)))
+
+;; Better searching
+(use-package swiper
+  :ensure t
+  :bind (("C-s" . swiper)))
+
+;; Better help results
+(use-package helpful
+  :ensure t
+  :bind (("C-h k" . #'helpful-key)
+	 ("C-c C-d" . #'helpful-at-point)
+	 ("C-h F" . #'helpful-function)
+	 ("C-h C" . #'helpful-command))
+  :config
+  (setq counsel-describe-function-function #'helpful-callable)
+  (setq counsel-describe-variable-function #'helpful-variable))
 
 ;; Project management
 (use-package projectile
@@ -60,6 +98,11 @@
   ("C-c p" . projectile-command-map)
   :init
   (projectile-mode 1))
+
+;; Counsel support for projectile
+(use-package counsel-projectile
+  :ensure t
+  :init (counsel-projectile-mode 1))
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
