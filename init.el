@@ -39,6 +39,11 @@
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
 
+;; Organize your life
+(use-package org
+  :hook ((org-mode . org-indent-mode)
+	 (org-mode . visual-line-mode)))
+
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :ensure t
