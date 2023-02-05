@@ -53,7 +53,7 @@
 (use-package ivy
   :ensure t
   :init (ivy-mode 1)
-  :config (setq ivy-use-virtual-buffers t))
+  :custom (ivy-use-virtual-buffers t))
 
 ;; Integrate ivy with common commands
 (use-package counsel
@@ -90,9 +90,9 @@
 	 ("C-c C-d" . #'helpful-at-point)
 	 ("C-h F" . #'helpful-function)
 	 ("C-h C" . #'helpful-command))
-  :config
-  (setq counsel-describe-function-function #'helpful-callable)
-  (setq counsel-describe-variable-function #'helpful-variable))
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable))
 
 ;; Project management
 (use-package projectile
