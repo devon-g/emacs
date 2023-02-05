@@ -17,7 +17,7 @@
 (setq visible-bell t)
 
 ;; Set font and size because this shit too small by default
-(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 200)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 175)
 
 ;; Enable column info in status line
 (column-number-mode)
