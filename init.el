@@ -127,5 +127,47 @@
   (setq send-mail-function 'sendmail-send-it)
   (setq sendmail-program "/usr/bin/msmtp")
   (setq mail-specify-envelope-from t)
-  (setq message-sendmail-envelope-from 'header)
-  (setq mail-envelope-from 'header))
+  (setq mail-envelope-from 'header)
+  :custom
+  (setq message-sendmail-envelope-from 'header))
+
+;; LSP Support
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deferred)
+  :init (setq lsp-keymap-prefix "C-c l")
+  :hook (lsp-mode . #'lsp-enable-which-key-integration))
+
+;; Snippets
+(use-package yasnippet-snippets
+  :ensure t)
+
+;; Snippet support
+(use-package yasnippet
+  :ensure t
+  :config (yas-reload-all)
+  :hook (lsp-mode . yas-minor-mode))
+
+;; Auto completion for lsp-mode
+(use-package company
+  :ensure t
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+;; UI for lsp-mode
+(use-package lsp-ui
+  :ensure t
+  :hook (lsp-mode . lsp-ui-mode))
+
+;; Syntax checking
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
+
+;; Configure rust stuff
+(use-package rustic
+  :ensure t
+  :config (setq rustic-format-on-save t))
