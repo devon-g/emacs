@@ -171,3 +171,7 @@
 (use-package rustic
   :ensure t
   :config (setq rustic-format-on-save t))
+
+;; Configure c++ stuff
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
