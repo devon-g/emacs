@@ -1,7 +1,5 @@
 ;; Move emacs auto custom config to its own file
 (setq custom-file (concat user-emacs-directory "custom.el"))
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 ;; Keep backups and autosaves in a sane location
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
@@ -173,5 +171,7 @@
   :config (setq rustic-format-on-save t))
 
 ;; Configure c++ stuff
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
+(use-package cc-mode
+  :hook
+  (c-mode . lsp)
+  (c++-mode . lsp))
