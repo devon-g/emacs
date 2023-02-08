@@ -175,3 +175,7 @@
   :hook
   (c-mode . lsp)
   (c++-mode . lsp))
+
+;; Nginx stuff
+(use-package nginx-mode
+  :ensure t)
