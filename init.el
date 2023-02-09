@@ -15,7 +15,7 @@
 (setq visible-bell t)
 
 ;; Set font and size because this shit too small by default
-(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 150)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 200)
 
 ;; Enable column info in status line
 (column-number-mode)
@@ -187,4 +187,5 @@
 
 ;; Nginx stuff
 (use-package nginx-mode
-  :straight t)
+  :straight t
+  :custom (rustic-lsp-setup-p nil))
