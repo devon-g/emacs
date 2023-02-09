@@ -22,20 +22,22 @@
 ;; Enable line numbers when in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-;; Initialize package sources
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
+;; Install straight.el if it isn't already
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; Make sure use-package is installed
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-;; Reduce load time
-(eval-when-compile (require 'use-package))
+;; Get use package ready
+(straight-use-package 'use-package)
 
 ;; Organize your life
 (use-package org
@@ -44,18 +46,18 @@
 
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
-  :ensure t
+  :straight t
   :init (load-theme 'doom-gruvbox t))
 
 ;; Minibuffer completion
 (use-package ivy
-  :ensure t
+  :straight t
   :init (ivy-mode 1)
   :custom (ivy-use-virtual-buffers t))
 
 ;; Integrate ivy with common commands
 (use-package counsel
-  :ensure t
+  :straight t
   :bind (("C-c C-r" . ivy-resume)
 	 ("M-x" . counsel-M-x)
 	 ("M-y" . counsel-yank-pop)
@@ -78,12 +80,12 @@
 
 ;; Better searching
 (use-package swiper
-  :ensure t
+  :straight t
   :bind (("C-s" . swiper)))
 
 ;; Better help results
 (use-package helpful
-  :ensure t
+  :straight t
   :bind (("C-h k" . #'helpful-key)
 	 ("C-c C-d" . #'helpful-at-point)
 	 ("C-h F" . #'helpful-function)
@@ -94,28 +96,28 @@
 
 ;; Project management
 (use-package projectile
-  :ensure t
+  :straight t
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :config (projectile-mode 1))
 
 ;; Counsel support for projectile
 (use-package counsel-projectile
-  :ensure t
+  :straight t
   :config (counsel-projectile-mode 1))
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
-  :ensure t
+  :straight t
   :init (which-key-mode 1))
 
 ;; Git integration
 (use-package magit
-  :ensure t)
+  :straight t)
 
 ;; Extension for magit
 (use-package forge
-  :ensure t)
+  :straight t)
 
 ;; Mail client
 ;; Uses msmtp to send mail
@@ -131,24 +133,24 @@
 
 ;; LSP Support
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :commands (lsp lsp-deferred)
   :init (setq lsp-keymap-prefix "C-c l")
   :hook (lsp-mode . #'lsp-enable-which-key-integration))
 
 ;; Snippets
 (use-package yasnippet-snippets
-  :ensure t)
+  :straight t)
 
 ;; Snippet support
 (use-package yasnippet
-  :ensure t
+  :straight t
   :config (yas-reload-all)
   :hook (lsp-mode . yas-minor-mode))
 
 ;; Auto completion for lsp-mode
 (use-package company
-  :ensure t
+  :straight t
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :custom
@@ -157,17 +159,28 @@
 
 ;; UI for lsp-mode
 (use-package lsp-ui
-  :ensure t
+  :straight t
   :hook (lsp-mode . lsp-ui-mode))
 
 ;; Syntax checking
 (use-package flycheck
-  :ensure t
+  :straight t
   :hook (prog-mode . flycheck-mode))
+
+;; Syntax highlighting
+(use-package tree-sitter
+  :straight t
+  :config (add-to-list 'tree-sitter-major-mode-language-alist '(python-mode . python))
+  :hook ((python-mode) . tree-sitter-hl-mode))
+
+
+(use-package tree-sitter-langs
+  :straight t
+  :after tree-sitter)
 
 ;; Configure rust stuff
 (use-package rustic
-  :ensure t
+  :straight t
   :config (setq rustic-format-on-save t))
 
 ;; Configure c++ stuff
@@ -178,4 +191,9 @@
 
 ;; Nginx stuff
 (use-package nginx-mode
-  :ensure t)
+  :straight t)
+
+;; Python stuff
+(use-package python
+  :after tree-sitter-langs
+  :hook (python-mode . lsp))
