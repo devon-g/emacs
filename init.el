@@ -15,7 +15,7 @@
 (setq visible-bell t)
 
 ;; Set font and size because this shit too small by default
-(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 175)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 150)
 
 ;; Enable column info in status line
 (column-number-mode)
@@ -131,36 +131,39 @@
   :custom
   (setq message-sendmail-envelope-from 'header))
 
-;; LSP Support
-(use-package lsp-mode
+;; Popup windows for lsp-bridge
+(use-package posframe
+  :straight t)
+
+;; lsp-bridge dependency
+(use-package markdown-mode
   :straight t
-  :commands (lsp lsp-deferred)
-  :init (setq lsp-keymap-prefix "C-c l")
-  :hook (lsp-mode . #'lsp-enable-which-key-integration))
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+;; Snippet support
+(use-package yasnippet
+  :straight t
+  :config (yas-global-mode 1))
 
 ;; Snippets
 (use-package yasnippet-snippets
   :straight t)
 
-;; Snippet support
-(use-package yasnippet
-  :straight t
-  :config (yas-reload-all)
-  :hook (lsp-mode . yas-minor-mode))
-
-;; Auto completion for lsp-mode
-(use-package company
-  :straight t
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
+;; LSP
+(add-to-list 'load-path "~/.config/emacs/straight/repos/lsp-bridge")
+(use-package lsp-bridge
+  :config (global-lsp-bridge-mode)
   :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (lsp-bridge-c-lsp-server "clangd")
+  (lsp-bridge-python-lsp-server "pylsp")
+  (lsp-bridge-python-ruff-lsp-server "pylsp_ruff"))
 
-;; UI for lsp-mode
-(use-package lsp-ui
-  :straight t
-  :hook (lsp-mode . lsp-ui-mode))
+;; lsp-bridge terminal support
+(unless (display-graphic-p)
+  (add-to-list 'load-path "~/.config/emacs/straight/repos/acm-terminal")
+  (with-eval-after-load 'acm
+    (require 'acm-terminal)))
 
 ;; Syntax checking
 (use-package flycheck
@@ -173,7 +176,6 @@
   :config (add-to-list 'tree-sitter-major-mode-language-alist '(python-mode . python))
   :hook ((python-mode) . tree-sitter-hl-mode))
 
-
 (use-package tree-sitter-langs
   :straight t
   :after tree-sitter)
@@ -183,17 +185,6 @@
   :straight t
   :config (setq rustic-format-on-save t))
 
-;; Configure c++ stuff
-(use-package cc-mode
-  :hook
-  (c-mode . lsp)
-  (c++-mode . lsp))
-
 ;; Nginx stuff
 (use-package nginx-mode
   :straight t)
-
-;; Python stuff
-(use-package python
-  :after tree-sitter-langs
-  :hook (python-mode . lsp))
