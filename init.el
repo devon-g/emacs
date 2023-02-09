@@ -41,47 +41,16 @@
 
 ;; Organize your life
 (use-package org
-  :hook ((org-mode . org-indent-mode)
-	 (org-mode . visual-line-mode)))
+  :hook
+  (org-mode . org-indent-mode)
+  (org-mode . visual-line-mode))
 
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :straight t
   :init (load-theme 'doom-gruvbox t))
 
-;; Minibuffer completion
-(use-package ivy
-  :straight t
-  :init (ivy-mode 1)
-  :custom (ivy-use-virtual-buffers t))
 
-;; Integrate ivy with common commands
-(use-package counsel
-  :straight t
-  :bind (("C-c C-r" . ivy-resume)
-	 ("M-x" . counsel-M-x)
-	 ("M-y" . counsel-yank-pop)
-	 ("C-x C-f" . counsel-find-file)
-	 ("C-x b" . counsel-switch-buffer)
-	 ("C-x r b" . counsel-bookmark)
-	 ("C-h a" . counsel-apropos-command)
-	 ("C-h b" . counsel-descbinds)
-	 ("C-h f" . counsel-describe-function)
-	 ("C-h v" . counsel-describe-variable)
-	 ("C-h o" . counsel-describe-symbol)
-	 ("C-h l" . counsel-find-library)
-	 ("C-h S" . counsel-info-lookup-symbol)
-	 ("C-h u" . counsel-unicode-char)
-	 ("C-c g" . counsel-git)
-	 ("C-c j" . counsel-git-grep)
-	 ("C-c k" . counsel-ag)
-	 ("C-x l" . counsel-locate)
-	 ("C-S-o" . counsel-rhythmbox)))
-
-;; Better searching
-(use-package swiper
-  :straight t
-  :bind (("C-s" . swiper)))
 
 ;; Better help results
 (use-package helpful
@@ -89,22 +58,7 @@
   :bind (("C-h k" . #'helpful-key)
 	 ("C-c C-d" . #'helpful-at-point)
 	 ("C-h F" . #'helpful-function)
-	 ("C-h C" . #'helpful-command))
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable))
-
-;; Project management
-(use-package projectile
-  :straight t
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :config (projectile-mode 1))
-
-;; Counsel support for projectile
-(use-package counsel-projectile
-  :straight t
-  :config (counsel-projectile-mode 1))
+	 ("C-h C" . #'helpful-command)))
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
@@ -115,8 +69,33 @@
 (use-package magit
   :straight t)
 
-;; Extension for magit
-(use-package forge
+;; LSP
+(use-package eglot
+  :straight t)
+
+;; Snippets
+(use-package yasnippet-snippets
+  :straight t)
+(use-package yasnippet
+  :straight t
+  :config (yas-global-mode))
+
+;; Syntax highlighting
+(use-package tree-sitter-langs
+  :straight t)
+(use-package tree-sitter
+  :straight t
+  :init (global-tree-sitter-mode)
+  :hook (tree-sitter-after-on . #'tree-sitter-hl-mode))
+
+;; Rust stuff
+(use-package rustic
+  :straight t
+  :config (setq rustic-format-on-save t)
+  :custom (rustic-lsp-client 'eglot))
+
+;; Nginx stuff
+(use-package nginx-mode
   :straight t)
 
 ;; Mail client
@@ -130,70 +109,3 @@
   (setq mail-envelope-from 'header)
   :custom
   (setq message-sendmail-envelope-from 'header))
-
-;; LSP Support
-(use-package lsp-mode
-  :straight t
-  :commands (lsp lsp-deferred)
-  :init (setq lsp-keymap-prefix "C-c l")
-  :hook (lsp-mode . #'lsp-enable-which-key-integration))
-
-;; Snippets
-(use-package yasnippet-snippets
-  :straight t)
-
-;; Snippet support
-(use-package yasnippet
-  :straight t
-  :config (yas-reload-all)
-  :hook (lsp-mode . yas-minor-mode))
-
-;; Auto completion for lsp-mode
-(use-package company
-  :straight t
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-;; UI for lsp-mode
-(use-package lsp-ui
-  :straight t
-  :hook (lsp-mode . lsp-ui-mode))
-
-;; Syntax checking
-(use-package flycheck
-  :straight t
-  :hook (prog-mode . flycheck-mode))
-
-;; Syntax highlighting
-(use-package tree-sitter
-  :straight t
-  :config (add-to-list 'tree-sitter-major-mode-language-alist '(python-mode . python))
-  :hook ((python-mode) . tree-sitter-hl-mode))
-
-
-(use-package tree-sitter-langs
-  :straight t
-  :after tree-sitter)
-
-;; Configure rust stuff
-(use-package rustic
-  :straight t
-  :config (setq rustic-format-on-save t))
-
-;; Configure c++ stuff
-(use-package cc-mode
-  :hook
-  (c-mode . lsp)
-  (c++-mode . lsp))
-
-;; Nginx stuff
-(use-package nginx-mode
-  :straight t)
-
-;; Python stuff
-(use-package python
-  :after tree-sitter-langs
-  :hook (python-mode . lsp))
