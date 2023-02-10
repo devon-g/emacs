@@ -39,18 +39,11 @@
 ;; Get use package ready
 (straight-use-package 'use-package)
 
-;; Organize your life
-(use-package org
-  :hook
-  (org-mode . org-indent-mode)
-  (org-mode . visual-line-mode))
 
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :straight t
   :init (load-theme 'doom-gruvbox t))
-
-
 
 ;; Better help results
 (use-package helpful
@@ -85,8 +78,8 @@
   :straight t)
 (use-package tree-sitter
   :straight t
-  :init (global-tree-sitter-mode)
-  :hook (tree-sitter-after-on . #'tree-sitter-hl-mode))
+  :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+  :config (global-tree-sitter-mode))
 
 ;; Rust stuff
 (use-package rustic
