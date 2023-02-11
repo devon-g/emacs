@@ -47,7 +47,10 @@
 ;; Auto completion
 (use-package corfu
   :straight t
-  :custom (corfu-auto t)
+  :load-path "straight/repos/corfu/extensions/"
+  :custom
+  (corfu-auto t)
+  (corfu-popupinfo-delay t)
   :init (global-corfu-mode))
 
 ;; Gruvbox theme from doom emacs
