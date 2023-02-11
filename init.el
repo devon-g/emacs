@@ -39,6 +39,16 @@
 ;; Get use package ready
 (straight-use-package 'use-package)
 
+;; Better minibuffer stuff
+(use-package vertico
+  :straight t
+  :init (vertico-mode))
+
+;; Auto completion
+(use-package corfu
+  :straight t
+  :custom (corfu-auto t)
+  :init (global-corfu-mode))
 
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
