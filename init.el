@@ -50,6 +50,21 @@
   :custom (corfu-auto t)
   :init (global-corfu-mode))
 
+;; Rich annotations for vertico
+(use-package marginalia
+  :straight t
+  :bind (("M-A" . marginalia-cycle)
+	 :map minibuffer-local-map
+	 ("M-A" . marginalia-cycle))
+  :init (marginalia-mode 1))
+
+;; Better auto completion ordering
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :straight t
@@ -58,7 +73,9 @@
 ;; Better help results
 (use-package helpful
   :straight t
-  :bind (("C-h k" . #'helpful-key)
+  :bind (("C-h f" . #'helpful-callable)
+	 ("C-h v" . #'helpful-variable)
+	 ("C-h k" . #'helpful-key)
 	 ("C-c C-d" . #'helpful-at-point)
 	 ("C-h F" . #'helpful-function)
 	 ("C-h C" . #'helpful-command)))
