@@ -88,6 +88,12 @@
   :straight t
   :init (which-key-mode 1))
 
+;; Better project management
+(use-package projectile
+  :straight t
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :init (projectile-mode))
+
 ;; Git integration
 (use-package magit
   :straight t)
