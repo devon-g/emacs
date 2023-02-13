@@ -63,6 +63,12 @@
   :straight t
   :init (marginalia-mode 1))
 
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-override '((file (styles basic partial-completion)))))
+
 ;; Better help results
 (use-package helpful
   :straight t
@@ -95,15 +101,17 @@
 ;; LSP Support
 (use-package lsp-mode
   :straight t
-  :commands (lsp lsp-deferred)
+  :commands lsp
   :init (setq lsp-keymap-prefix "C-c l")
-  :hook (lsp-mode . #'lsp-enable-which-key-integration))
-
-;; Snippets
-(use-package yasnippet-snippets
-  :straight t)
+  :hook
+  (python-mode . lsp)
+  (c-mode . lsp)
+  (c++-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration))
 
 ;; Snippet support
+(use-package yasnippet-snippets
+  :straight t)
 (use-package yasnippet
   :straight t
   :config (yas-reload-all)
@@ -112,7 +120,7 @@
 ;; UI for lsp-mode
 (use-package lsp-ui
   :straight t
-  :hook (lsp-mode . lsp-ui-mode))
+  :commands lsp-ui-mode)
 
 ;; Syntax checking
 (use-package flycheck
@@ -132,20 +140,9 @@
   :straight t
   :config (setq rustic-format-on-save t))
 
-;; Configure c++ stuff
-(use-package cc-mode
-  :hook
-  (c-mode . lsp)
-  (c++-mode . lsp))
-
 ;; Nginx stuff
 (use-package nginx-mode
   :straight t)
-
-;; Python stuff
-(use-package python
-  :after tree-sitter-langs
-  :hook (python-mode . lsp))
 
 ;; Mail client
 ;; Uses msmtp to send mail
