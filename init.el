@@ -39,72 +39,45 @@
 ;; Get use package ready
 (straight-use-package 'use-package)
 
-;; Organize your life
-(use-package org
-  :hook ((org-mode . org-indent-mode)
-	 (org-mode . visual-line-mode)))
-
 ;; Gruvbox theme from doom emacs
 (use-package doom-themes
   :straight t
   :init (load-theme 'doom-gruvbox t))
 
-;; Minibuffer completion
-(use-package ivy
+;; Better minibuffer stuff
+(use-package vertico
   :straight t
-  :init (ivy-mode 1)
-  :custom (ivy-use-virtual-buffers t))
+  :init (vertico-mode 1))
 
-;; Integrate ivy with common commands
-(use-package counsel
+;; Auto completion
+(use-package corfu
   :straight t
-  :bind (("C-c C-r" . ivy-resume)
-	 ("M-x" . counsel-M-x)
-	 ("M-y" . counsel-yank-pop)
-	 ("C-x C-f" . counsel-find-file)
-	 ("C-x b" . counsel-switch-buffer)
-	 ("C-x r b" . counsel-bookmark)
-	 ("C-h a" . counsel-apropos-command)
-	 ("C-h b" . counsel-descbinds)
-	 ("C-h f" . counsel-describe-function)
-	 ("C-h v" . counsel-describe-variable)
-	 ("C-h o" . counsel-describe-symbol)
-	 ("C-h l" . counsel-find-library)
-	 ("C-h S" . counsel-info-lookup-symbol)
-	 ("C-h u" . counsel-unicode-char)
-	 ("C-c g" . counsel-git)
-	 ("C-c j" . counsel-git-grep)
-	 ("C-c k" . counsel-ag)
-	 ("C-x l" . counsel-locate)
-	 ("C-S-o" . counsel-rhythmbox)))
+  :load-path "straight/repos/corfu/extensions/"
+  :custom
+  (corfu-auto t)
+  (corfu-popupinfo-delay t)
+  :init (global-corfu-mode 1))
 
-;; Better searching
-(use-package swiper
+;; Rich annotations for vertico
+(use-package marginalia
   :straight t
-  :bind (("C-s" . swiper)))
+  :init (marginalia-mode 1))
 
 ;; Better help results
 (use-package helpful
   :straight t
-  :bind (("C-h k" . #'helpful-key)
+  :bind (("C-h f" . #'helpful-callable)
+	 ("C-h v" . #'helpful-variable)
+	 ("C-h k" . #'helpful-key)
 	 ("C-c C-d" . #'helpful-at-point)
 	 ("C-h F" . #'helpful-function)
-	 ("C-h C" . #'helpful-command))
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable))
+	 ("C-h C" . #'helpful-command)))
 
 ;; Project management
 (use-package projectile
   :straight t
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
+  :bind-keymap ("C-c p" . projectile-command-map)
   :config (projectile-mode 1))
-
-;; Counsel support for projectile
-(use-package counsel-projectile
-  :straight t
-  :config (counsel-projectile-mode 1))
 
 ;; Show what keybinds do while i'm still learning
 (use-package which-key
@@ -118,18 +91,6 @@
 ;; Extension for magit
 (use-package forge
   :straight t)
-
-;; Mail client
-;; Uses msmtp to send mail
-;; Uses mbsync to sync mail
-(use-package notmuch
-  :config
-  (setq send-mail-function 'sendmail-send-it)
-  (setq sendmail-program "/usr/bin/msmtp")
-  (setq mail-specify-envelope-from t)
-  (setq mail-envelope-from 'header)
-  :custom
-  (setq message-sendmail-envelope-from 'header))
 
 ;; LSP Support
 (use-package lsp-mode
@@ -148,15 +109,6 @@
   :config (yas-reload-all)
   :hook (lsp-mode . yas-minor-mode))
 
-;; Auto completion for lsp-mode
-(use-package company
-  :straight t
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
 ;; UI for lsp-mode
 (use-package lsp-ui
   :straight t
@@ -168,15 +120,12 @@
   :hook (prog-mode . flycheck-mode))
 
 ;; Syntax highlighting
+(use-package tree-sitter-langs
+  :straight t)
 (use-package tree-sitter
   :straight t
-  :config (add-to-list 'tree-sitter-major-mode-language-alist '(python-mode . python))
-  :hook ((python-mode) . tree-sitter-hl-mode))
-
-
-(use-package tree-sitter-langs
-  :straight t
-  :after tree-sitter)
+  :hook ((python-mode) . tree-sitter-hl-mode)
+  :config (global-tree-sitter-mode 1))
 
 ;; Configure rust stuff
 (use-package rustic
@@ -197,3 +146,15 @@
 (use-package python
   :after tree-sitter-langs
   :hook (python-mode . lsp))
+
+;; Mail client
+;; Uses msmtp to send mail
+;; Uses mbsync to sync mail
+(use-package notmuch
+  :config
+  (setq send-mail-function 'sendmail-send-it)
+  (setq sendmail-program "/usr/bin/msmtp")
+  (setq mail-specify-envelope-from t)
+  (setq mail-envelope-from 'header)
+  :custom
+  (setq message-sendmail-envelope-from 'header))
