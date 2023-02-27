@@ -5,3 +5,8 @@
 /.lsp-session-v1
 /elpa/
 /auto-save-list/
+/tramp
+/projectile.cache
+/custom.el
+/.cache/
+/%backup%~
