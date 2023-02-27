@@ -44,6 +44,12 @@
   :straight t
   :init (load-theme 'doom-gruvbox t))
 
+;; Nice organization stuff
+(use-package org
+  :straight (:type built-in)
+  :bind (("C-c l" . org-store-link)
+	 ("C-c a" . org-agenda)))
+
 ;; Better minibuffer stuff
 (use-package vertico
   :straight t
