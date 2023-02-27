@@ -109,6 +109,12 @@
   :straight t
   :commands lsp
   :init (setq lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-tramp-connection "clangd")
+		    :major-modes '(c++-mode)
+		    :remote? t
+		    :server-id 'ros2vm))
   :hook
   (python-mode . lsp)
   (c-mode . lsp)
