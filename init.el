@@ -156,6 +156,24 @@
 (use-package nginx-mode
   :straight t)
 
+;; Latex stuff
+(use-package auctex
+  :straight t
+  :defer t
+  :custom
+  (TeX-auto-save t)
+  (TeX-parse-self t)
+  (TeX-master nil)
+  (TeX-view-program-selection '((output-pdf "PDF Tools")) TeX-source-correlate-start-server t))
+(use-package pdf-tools
+  :straight t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :hook (pdf-view-mode . auto-revert-mode)
+  :config
+  (pdf-loader-install))
+
+(setq auto-revert-interval 0.1)
+
 ;; Mail client
 ;; Uses msmtp to send mail
 ;; Uses mbsync to sync mail
